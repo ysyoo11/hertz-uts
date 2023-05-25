@@ -17,7 +17,7 @@ import cars from 'public/cars.json';
 
 export default function IndexPage() {
   const [showInfo, setShowInfo] = useState<number | null>(null);
-  const { showModal, closeModal } = useAssertiveStore();
+  const { showModal, closeModal, showNoti } = useAssertiveStore();
   const { cartItems, setCartItems } = useHertzStore();
 
   const addToCart = useCallback(
@@ -35,9 +35,10 @@ export default function IndexPage() {
         });
         return;
       }
+      showNoti({ title: `${car.brand} ${car.model} is added to your cart.` });
       setCartItems((prev) => [...prev, car]);
     },
-    [cartItems, showModal, closeModal, setCartItems]
+    [cartItems, showModal, closeModal, setCartItems, showNoti]
   );
 
   return (
