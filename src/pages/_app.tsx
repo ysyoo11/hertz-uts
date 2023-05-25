@@ -19,13 +19,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         startPosition={0.3}
         options={{ easing: 'ease', speed: 500, showSpinner: false }}
       />
-      <HertzProvider>
-        <AssertiveStoreProvider>
+      <AssertiveStoreProvider>
+        <HertzProvider>
           <Layout>
             <Component {...pageProps} />
           </Layout>
-        </AssertiveStoreProvider>
-      </HertzProvider>
+        </HertzProvider>
+      </AssertiveStoreProvider>
     </>
   );
 }

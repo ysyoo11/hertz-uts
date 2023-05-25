@@ -28,6 +28,7 @@ export type Item = {
   pricePerDay: number;
   description: string;
   imageSrc: string;
+  rentalDays: number;
 };
 
 export type HertzState = {
@@ -51,34 +52,50 @@ const hertzReducer: Reducer<HertzState, HertzAction> = (state, action) => {
 
 type HertzStore = HertzState & {
   setCartItems: Dispatch<SetStateAction<Item[]>>;
-  total: number;
+  totalPrice: number;
 };
 
 export function HertzProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(hertzReducer, initialState);
   const [cartItems, setCartItems] = useState<Item[]>([]);
 
-  const total = cartItems.length;
+  const totalPrice = useMemo(() => {
+    const priceArray = cartItems.map((car) => car.pricePerDay * car.rentalDays);
+    return priceArray.reduce((partialSum, a) => partialSum + a, 0);
+  }, [cartItems]);
+
+  useEffect(() => {
+    const savedData = window.sessionStorage.getItem(SAVED_CART_ITEMS);
+    if (savedData) {
+      const parsedData = JSON.parse(savedData) as Array<Item>;
+      const parsedItems = parsedData.map((item) => ({
+        ...item,
+        rentalDays: +item.rentalDays,
+        mileage: +item.mileage,
+        seats: +item.seats,
+        bags: +item.bags,
+        pricePerDay: +item.pricePerDay,
+        range: item.range ? +item.range : undefined,
+      }));
+      setCartItems(parsedItems);
+      return;
+    }
+    setCartItems([]);
+  }, []);
+
+  useEffect(() => {
+    window.sessionStorage.setItem(SAVED_CART_ITEMS, JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const value = useMemo<HertzStore>(
     () => ({
       ...state,
       cartItems,
       setCartItems,
-      total,
+      totalPrice,
     }),
-    [state, cartItems, total]
+    [state, cartItems, totalPrice]
   );
-
-  useEffect(() => {
-    const savedData = sessionStorage.getItem(SAVED_CART_ITEMS);
-    if (!savedData) return;
-    setCartItems(JSON.parse(savedData));
-  }, []);
-
-  useEffect(() => {
-    sessionStorage.setItem(SAVED_CART_ITEMS, JSON.stringify(cartItems));
-  }, [cartItems]);
 
   return (
     <HertzContext.Provider value={value}>{children}</HertzContext.Provider>
