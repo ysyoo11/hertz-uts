@@ -1,11 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 
+import { validateItems } from '@/backend/item/validation';
 import { Item, useHertzStore } from '@/components/hertz-context';
 import { useAssertiveStore } from '@/context/assertives';
-import { MAX_RENT_DAYS } from '@/defines/policy';
+import { MAX_RENTAL_DAYS } from '@/defines/policy';
 import displayPrice from '@/utils/display-price';
 
 import { ItemDetailModal } from './ItemDetailModal';
@@ -20,7 +22,8 @@ export default function CartModal({ isOpen, onClose }: Props) {
     show: boolean;
     car: Item | null;
   }>({ show: false, car: null });
-  const { showModal } = useAssertiveStore();
+  const { showModal, showAlert } = useAssertiveStore();
+  const router = useRouter();
 
   const { cartItems, setCartItems, totalPrice } = useHertzStore();
 
@@ -145,7 +148,7 @@ export default function CartModal({ isOpen, onClose }: Props) {
                                             className='rounded-md border border-gray-400 bg-gray-100 p-1 text-xs sm:text-sm'
                                           >
                                             {Array.from(
-                                              Array(MAX_RENT_DAYS).keys()
+                                              Array(MAX_RENTAL_DAYS).keys()
                                             ).map((i) => (
                                               <option
                                                 key={`quantity-option-${i + 1}`}
@@ -244,6 +247,14 @@ export default function CartModal({ isOpen, onClose }: Props) {
                       <button
                         className='w-full rounded-md bg-hertz py-3 hover:bg-yellow-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-white'
                         disabled={cartItems.length < 1}
+                        onClick={async () => {
+                          await validateItems(cartItems)
+                            .then(() => {
+                              onClose();
+                              router.push('/checkout');
+                            })
+                            .catch(showAlert);
+                        }}
                       >
                         Checkout
                       </button>
