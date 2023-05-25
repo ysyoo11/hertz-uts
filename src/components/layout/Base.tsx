@@ -10,7 +10,7 @@ export default function BaseLayout({ children }: Props) {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main className='py-2 px-4'>{children}</main>
     </>
   );
 }
