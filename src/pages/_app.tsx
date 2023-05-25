@@ -1,6 +1,7 @@
 import NextNProgress from 'nextjs-progressbar';
 
 import '@/assets/main.css';
+import { HertzProvider } from '@/components/hertz-context';
 import BaseLayout from '@/components/layout/Base';
 import { AssertiveStoreProvider } from '@/context/assertives';
 
@@ -18,11 +19,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         startPosition={0.3}
         options={{ easing: 'ease', speed: 500, showSpinner: false }}
       />
-      <AssertiveStoreProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </AssertiveStoreProvider>
+      <HertzProvider>
+        <AssertiveStoreProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AssertiveStoreProvider>
+      </HertzProvider>
     </>
   );
 }
