@@ -11,25 +11,8 @@ import {
   useState,
 } from 'react';
 
+import { type Item } from '@/backend/order/model';
 import { SAVED_CART_ITEMS } from '@/constant/session-storage-key';
-
-export type Item = {
-  id: string;
-  category: 'suv' | 'sedan' | 'wagon';
-  availability: boolean;
-  brand: string;
-  model: string;
-  year: string;
-  mileage: number;
-  fuel: 'electricity' | 'petrol';
-  range?: number;
-  seats: number;
-  bags: number;
-  pricePerDay: number;
-  description: string;
-  imageSrc: string;
-  rentalDays: number;
-};
 
 export type HertzState = {
   cartItems: Item[];

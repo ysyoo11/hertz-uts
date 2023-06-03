@@ -3,8 +3,9 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { Fragment, useRef } from 'react';
 
-import { Item } from '@/components/hertz-context';
 import displayPrice from '@/utils/display-price';
+
+import type { Item } from '@/backend/order/model';
 
 interface Props {
   show: boolean;
@@ -80,6 +81,7 @@ export function ItemDetailModal({ show, close, car }: Props) {
                     alt={`${car.brand}-${car.model}`}
                     width={280}
                     height={280}
+                    style={{ width: 'auto', height: 'auto' }}
                   />
                   <div>
                     <p className='text-sm'>{car.description}</p>

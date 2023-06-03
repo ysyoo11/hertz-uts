@@ -10,7 +10,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 
-import { Item, useHertzStore } from '@/components/hertz-context';
+import { type Item } from '@/backend/order/model';
+import { useHertzStore } from '@/components/hertz-context';
 import { useAssertiveStore } from '@/context/assertives';
 import displayPrice from '@/utils/display-price';
 import cars from 'public/cars.json';
@@ -58,6 +59,8 @@ export default function IndexPage() {
                 alt={`${car.brand}-${car.model}`}
                 width={200}
                 height={200}
+                placeholder='blur'
+                blurDataURL={car.imageSrc}
               />
               {car.fuel === 'electricity' && (
                 <div className='absolute top-2 left-2 border border-green-700 bg-green-200 px-1 py-0.5 text-xs font-medium text-green-900'>
