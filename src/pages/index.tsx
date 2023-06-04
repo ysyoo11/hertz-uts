@@ -57,7 +57,7 @@ export default function IndexPage({ cars }: Props) {
   return (
     <section className='mx-auto w-full max-w-7xl pb-20'>
       <h1 className='mt-4 text-2xl font-medium md:mt-6 md:text-3xl'>
-        Hertz-UTS Rental Car. Let&apos;s Go!
+        Hertz-UTS Rental Car. Let&apos;s Go!!
       </h1>
       <div className='mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         {(cars as Item[]).map((car, i) => (
@@ -66,14 +66,15 @@ export default function IndexPage({ cars }: Props) {
             className='rounded-md border border-b-8 border-b-hertz px-4 pt-4 pb-2 shadow'
           >
             <div className='relative flex w-full justify-center'>
-              <Image
-                src={car.imageSrc}
-                alt={`${car.brand}-${car.model}`}
-                width={200}
-                height={200}
-                placeholder='blur'
-                blurDataURL={car.imageSrc}
-              />
+              <div className='relative h-28 w-48'>
+                <Image
+                  src={car.imageSrc}
+                  alt={`${car.brand}-${car.model}`}
+                  fill
+                  placeholder='blur'
+                  blurDataURL={car.imageSrc}
+                />
+              </div>
               {car.fuel === 'electricity' && (
                 <div className='absolute top-2 left-2 border border-green-700 bg-green-200 px-1 py-0.5 text-xs font-medium text-green-900'>
                   Electric Vehicle

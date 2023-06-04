@@ -53,12 +53,11 @@ export default function CartDetails({ className }: Props) {
           {cartItems.map((car, idx) => (
             <tr key={`${car.id}-${idx}`}>
               <td className='relative flex items-center whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:space-x-4 sm:pl-0'>
-                <div className='hidden sm:block'>
+                <div className='relative hidden h-16 w-24 sm:block'>
                   <Image
                     src={car.imageSrc}
                     alt={`${car.brand}-${car.model}`}
-                    width={96}
-                    height={96}
+                    fill
                     blurDataURL={car.imageSrc}
                     placeholder='blur'
                   />
