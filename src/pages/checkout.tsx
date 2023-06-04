@@ -1,6 +1,7 @@
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import debounce from 'lodash.debounce';
-import { useCallback, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CustomerInfo, paymentMethods, states } from '@/backend/order/model';
 import CartDetails from '@/components/custom/CartDetails';
@@ -26,13 +27,16 @@ const initialCustomerInfo: CustomerInfo = {
   state: 'NSW',
   email: '',
   phone: '',
-  payment: 'credit card',
+  payment: 'credit',
 };
 
 export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [customerInfo, setCustomerInfo] = useState(initialCustomerInfo);
-  const { showModal, showAlert, showNoti } = useAssertiveStore();
+  const [confirmedOrderId, setConfirmedOrderId] = useState<string | null>(null);
+
+  const router = useRouter();
+  const { showAlert, showNoti } = useAssertiveStore();
   const { cartItems, setCartItems, totalPrice } = useHertzStore();
 
   const stateDropdownItems: DropdownItem[] = useMemo(
@@ -69,14 +73,48 @@ export default function CheckoutPage() {
 
   const confirmOrder = useCallback(async () => {
     setLoading(true);
-    submitOrder({ customerInfo, items: cartItems })
-      .then(() => showNoti({ title: 'Order placed!' }))
+    await submitOrder({ customerInfo, items: cartItems })
+      .then(({ id }) => {
+        showNoti({ title: 'Order placed!' });
+        setCartItems([]);
+        setConfirmedOrderId(id);
+      })
       .catch((e) => {
         const { code, message } = JSON.parse(e)[0];
         showAlert({ name: `Code: ${code}`, message: message });
       })
       .finally(() => setLoading(false));
-  }, [cartItems, customerInfo, showAlert, showNoti]);
+  }, [cartItems, setCartItems, customerInfo, showAlert, showNoti]);
+
+  useEffect(() => {
+    if (cartItems.length < 1 && !confirmedOrderId) {
+      router.push('/');
+    }
+  }, [cartItems.length, confirmedOrderId, router]);
+
+  if (confirmedOrderId) {
+    return (
+      <div className='mx-auto w-full max-w-3xl pb-36'>
+        <h1 className='mt-8 text-4xl font-semibold'>Thank you!</h1>
+        <p className='mt-12'>
+          Your order is now confirmed!
+          <br />
+          Your order number is&nbsp;
+          <span className='font-medium text-orange-500'>
+            {confirmedOrderId}
+          </span>
+          .
+        </p>
+        <button
+          className='group mt-12 flex items-center space-x-3 text-lg font-medium hover:underline'
+          onClick={() => router.push('/')}
+        >
+          <span>Go back to home</span>
+          <ArrowRightIcon className='h-5 w-5 transition-transform group-hover:translate-x-1.5' />
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className='mx-auto w-full max-w-3xl pb-36'>
@@ -108,23 +146,29 @@ export default function CheckoutPage() {
                 debouncedSetCustomerInfo(e.target.value, 'firstName')
               }
               label='First name'
+              aria-label='First name'
               className='w-full'
               placeholder='John'
+              disabled={loading}
             />
             <Input
               onChange={(e) =>
                 debouncedSetCustomerInfo(e.target.value, 'lastName')
               }
               label='Last name'
+              aria-label='Last name'
               className='w-full'
               placeholder='Doe'
+              disabled={loading}
             />
           </div>
           <Input
             onChange={(e) => debouncedSetCustomerInfo(e.target.value, 'email')}
             label='Email'
+            aria-label='Email'
             placeholder='hertz-uts@uts.edu.au'
             type='email'
+            disabled={loading}
           />
           <Input
             onChange={(e) =>
@@ -132,6 +176,7 @@ export default function CheckoutPage() {
             }
             label='Address Line 1'
             aria-label='Address Line 1'
+            disabled={loading}
           />
           <Input
             onChange={(e) =>
@@ -140,12 +185,15 @@ export default function CheckoutPage() {
             label='Address Line 2'
             aria-label='Address Line 2'
             optional
+            disabled={loading}
           />
           <div className='flex w-full space-x-2'>
             <Input
               onChange={(e) => debouncedSetCustomerInfo(e.target.value, 'city')}
               label='City'
+              aria-label='City'
               className='w-full'
+              disabled={loading}
             />
             <Dropdown
               label='State'
@@ -166,11 +214,15 @@ export default function CheckoutPage() {
               debouncedSetCustomerInfo(e.target.value, 'postcode')
             }
             label='Postcode'
+            aria-label='Postcode'
+            disabled={loading}
           />
           <Input
             onChange={(e) => debouncedSetCustomerInfo(e.target.value, 'phone')}
             label='Phone'
+            aria-label='Phone'
             type='tel'
+            disabled={loading}
           />
           <Dropdown
             label='Payment type'
@@ -191,8 +243,8 @@ export default function CheckoutPage() {
             }
           />
           <button
-            className='w-full rounded-md bg-hertz py-3 hover:bg-yellow-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-white'
-            disabled={cartItems.length < 1}
+            className='!mt-6 w-full rounded-md bg-hertz py-3 hover:bg-yellow-600 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-white'
+            disabled={cartItems.length < 1 || loading}
             onClick={confirmOrder}
           >
             Place Order
