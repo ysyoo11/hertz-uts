@@ -16,7 +16,7 @@ model Order {
   firstName String   @db.VarChar(255)
   lastName  String   @db.VarChar(255)
   address1  String
-  address2  String
+  address2  String?
   city      String
   postcode  String
   state     State    @default(NSW)
