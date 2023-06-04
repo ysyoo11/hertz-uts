@@ -6,28 +6,40 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { Battery100Icon } from '@heroicons/react/24/solid';
+import { type Item } from '@prisma/client';
 import clsx from 'clsx';
+import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 
-import { type Item } from '@/backend/order/model';
+import prisma from '@/backend/server/prisma';
 import { useHertzStore } from '@/components/hertz-context';
 import { useAssertiveStore } from '@/context/assertives';
+import { MAX_RENTAL_CARS } from '@/defines/policy';
 import displayPrice from '@/utils/display-price';
-import cars from 'public/cars.json';
 
-export default function IndexPage() {
+interface Props {
+  cars: Item[];
+}
+
+export default function IndexPage({ cars }: Props) {
   const [showInfo, setShowInfo] = useState<number | null>(null);
   const { showModal, closeModal, showNoti } = useAssertiveStore();
   const { cartItems, setCartItems } = useHertzStore();
 
   const addToCart = useCallback(
     (car: Item) => {
-      if (cartItems.length >= 4) {
+      if (cartItems.includes(car)) {
+        showNoti({
+          title: 'You already have that car in your cart',
+          variant: 'alert',
+        });
+        return;
+      }
+      if (cartItems.length >= MAX_RENTAL_CARS) {
         showModal({
           title: 'It has reached maximum number of renting cars',
-          content:
-            'Sorry, You cannot rent more than four cars at once. Please contact us if you would like to rent more than four cars.',
+          content: `Sorry, You cannot rent more than four cars at once. Please contact us if you would like to rent more than ${MAX_RENTAL_CARS} cars.`,
           actionButton: {
             label: 'Got it',
             onClick: closeModal,
@@ -43,7 +55,7 @@ export default function IndexPage() {
   );
 
   return (
-    <section className='mx-auto w-full max-w-7xl'>
+    <section className='mx-auto w-full max-w-7xl pb-20'>
       <h1 className='mt-4 text-2xl font-medium md:mt-6 md:text-3xl'>
         Hertz-UTS Rental Car. Let&apos;s Go!
       </h1>
@@ -146,3 +158,17 @@ export default function IndexPage() {
     </section>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const cars = await prisma.item.findMany();
+
+    return { props: { cars }, revalidate: 10 };
+  } catch (e) {
+    console.error(e);
+    return {
+      props: { products: [] },
+      revalidate: 10,
+    };
+  }
+};
