@@ -139,11 +139,6 @@ export default function CartModal({ isOpen, onClose }: Props) {
           </div>
         </Dialog>
       </Transition>
-      {/* <ItemDetailModal
-        show={showDetail.show}
-        close={() => setShowDetail((prev) => ({ ...prev, show: false }))}
-        car={showDetail.car}
-      /> */}
     </>
   );
 }

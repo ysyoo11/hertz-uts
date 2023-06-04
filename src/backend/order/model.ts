@@ -1,29 +1,10 @@
-export const carCategories = ['suv', 'sedan', 'wagon'] as const;
-export type CarCategory = (typeof carCategories)[number];
+import { Item, Payment, State } from '@prisma/client';
 
-export type Item = {
-  id: string;
-  category: CarCategory;
-  availability: boolean;
-  brand: string;
-  model: string;
-  year: string;
-  mileage: number;
-  fuel: 'electricity' | 'petrol';
-  range?: number;
-  seats: number;
-  bags: number;
-  pricePerDay: number;
-  description: string;
-  imageSrc: string;
-  rentalDays: number;
-};
+export const carCategories = ['suv', 'sedan', 'wagon'] as const;
 
 export const states = ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS'] as const;
-export type State = (typeof states)[number];
 
-export const paymentMethods = ['credit card', 'paypal', 'applePay'] as const;
-export type Payment = (typeof paymentMethods)[number];
+export const paymentMethods = ['credit', 'paypal', 'applePay'] as const;
 
 export type CustomerInfo = {
   firstName: string;

@@ -1,11 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { type Item } from '@prisma/client';
 import Image from 'next/image';
 import { Fragment, useRef } from 'react';
 
 import displayPrice from '@/utils/display-price';
-
-import type { Item } from '@/backend/order/model';
 
 interface Props {
   show: boolean;

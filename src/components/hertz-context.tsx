@@ -1,3 +1,4 @@
+import { Item } from '@prisma/client';
 import {
   Dispatch,
   ReactNode,
@@ -11,7 +12,6 @@ import {
   useState,
 } from 'react';
 
-import { type Item } from '@/backend/order/model';
 import { SAVED_CART_ITEMS } from '@/constant/session-storage-key';
 
 export type HertzState = {
@@ -53,12 +53,13 @@ export function HertzProvider({ children }: { children: ReactNode }) {
       const parsedData = JSON.parse(savedData) as Array<Item>;
       const parsedItems = parsedData.map((item) => ({
         ...item,
+        id: +item.id,
         rentalDays: +item.rentalDays,
         mileage: +item.mileage,
         seats: +item.seats,
         bags: +item.bags,
         pricePerDay: +item.pricePerDay,
-        range: item.range ? +item.range : undefined,
+        range: item.range ? +item.range : null,
       }));
       setCartItems(parsedItems);
       return;

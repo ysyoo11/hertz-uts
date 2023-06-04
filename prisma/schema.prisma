@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  items     Item[]
+  firstName String   @db.VarChar(255)
+  lastName  String   @db.VarChar(255)
+  address1  String
+  address2  String?
+  city      String
+  postcode  String
+  state     State    @default(NSW)
+  email     String
+  phone     String
+  payment   Payment  @default(credit)
+}
+
+model Item {
+  id           Int         @id @default(autoincrement())
+  category     CarCategory @default(suv)
+  availability Boolean     @default(true)
+  brand        String
+  model        String
+  year         String
+  mileage      Int
+  fuel         Fuel        @default(petrol)
+  range        Int?
+  seats        Int
+  bags         Int
+  pricePerDay  Int
+  description  String      @db.Text()
+  imageSrc     String
+  rentalDays   Int
+  Order        Order?      @relation(fields: [orderId], references: [id])
+  orderId      Int?
+
+  @@index([orderId])
+}
+
+enum Payment {
+  credit
+  paypal
+  applePay
+}
+
+enum State {
+  NSW
+  VIC
+  QLD
+  WA
+  SA
+  TAS
+}
+
+enum CarCategory {
+  suv
+  sedan
+  wagon
+}
+
+enum Fuel {
+  electricity
+  petrol
+}
