@@ -46,15 +46,15 @@ export async function validatePostOrder(params: Params): Promise<PostOrder> {
     }),
     items: z
       .object({
-        id: z.string(),
+        id: z.number(),
         category: z.enum(carCategories),
-        availability: z.boolean(),
+        availability: z.literal(true),
         brand: z.string(),
         model: z.string(),
         year: z.string(),
         mileage: z.number(),
         fuel: z.enum(['electricity', 'petrol']),
-        range: z.number().optional(),
+        range: z.number().nullable(),
         seats: z.number().min(1).max(10),
         bags: z.number().min(1).max(12),
         pricePerDay: z.number().min(10),

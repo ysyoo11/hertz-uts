@@ -1,4 +1,5 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { type Item } from '@prisma/client';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -9,8 +10,6 @@ import { MAX_RENTAL_DAYS } from '@/defines/policy';
 import displayPrice from '@/utils/display-price';
 
 import { ItemDetailModal } from './ItemDetailModal';
-
-import type { Item } from '@/backend/order/model';
 
 interface Props {
   className?: string;
