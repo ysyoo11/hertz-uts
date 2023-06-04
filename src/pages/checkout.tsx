@@ -140,7 +140,7 @@ export default function CheckoutPage() {
             confirmOrder();
           }}
         >
-          <div className='flex w-full space-x-2'>
+          <div className='flex w-full space-x-4'>
             <Input
               onChange={(e) =>
                 debouncedSetCustomerInfo(e.target.value, 'firstName')
@@ -187,7 +187,7 @@ export default function CheckoutPage() {
             optional
             disabled={loading}
           />
-          <div className='flex w-full space-x-2'>
+          <div className='flex w-full space-x-4'>
             <Input
               onChange={(e) => debouncedSetCustomerInfo(e.target.value, 'city')}
               label='City'
