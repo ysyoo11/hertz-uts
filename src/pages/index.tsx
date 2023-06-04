@@ -57,7 +57,7 @@ export default function IndexPage({ cars }: Props) {
   return (
     <section className='mx-auto w-full max-w-7xl pb-20'>
       <h1 className='mt-4 text-2xl font-medium md:mt-6 md:text-3xl'>
-        Hertz-UTS Rental Car. Let&apos;s Go!
+        Hertz-UTS Rental Car. Let&apos;s Go!!
       </h1>
       <div className='mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         {(cars as Item[]).map((car, i) => (
