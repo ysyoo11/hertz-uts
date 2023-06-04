@@ -12,10 +12,10 @@ import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 
-import prisma from '@/backend/server/prisma';
 import { useHertzStore } from '@/components/hertz-context';
 import { useAssertiveStore } from '@/context/assertives';
 import { MAX_RENTAL_CARS } from '@/defines/policy';
+import { getCars } from '@/lib/items/get-cars';
 import displayPrice from '@/utils/display-price';
 
 interface Props {
@@ -162,7 +162,7 @@ export default function IndexPage({ cars }: Props) {
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const cars = await prisma.item.findMany();
+    const cars = await getCars();
 
     return { props: { cars }, revalidate: 10 };
   } catch (e) {
