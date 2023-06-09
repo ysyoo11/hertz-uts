@@ -78,9 +78,8 @@ export function ItemDetailModal({ show, close, car }: Props) {
                     blurDataURL={car.imageSrc}
                     placeholder='blur'
                     alt={`${car.brand}-${car.model}`}
-                    width={280}
-                    height={280}
-                    style={{ width: 'auto', height: 'auto' }}
+                    width={220}
+                    height={128}
                   />
                   <div>
                     <p className='text-sm'>{car.description}</p>
