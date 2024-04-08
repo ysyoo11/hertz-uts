@@ -79,10 +79,7 @@ export default function CheckoutPage() {
         setCartItems([]);
         setConfirmedOrderId(id);
       })
-      .catch((e) => {
-        const { code, message } = JSON.parse(e)[0];
-        showAlert({ name: `Code: ${code}`, message: message });
-      })
+      .catch(showAlert)
       .finally(() => setLoading(false));
   }, [cartItems, setCartItems, customerInfo, showAlert, showNoti]);
 

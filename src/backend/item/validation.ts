@@ -15,7 +15,7 @@ export async function validateItems(params: Params): Promise<Item[]> {
       year: z.string(),
       mileage: z.number(),
       fuel: z.enum(['electricity', 'petrol']),
-      range: z.number().nullable(),
+      range: z.number().nullable().optional(),
       seats: z.number().min(1).max(10),
       bags: z.number().min(1).max(10),
       pricePerDay: z.number(),

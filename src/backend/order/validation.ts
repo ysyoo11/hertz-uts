@@ -54,7 +54,7 @@ export async function validatePostOrder(params: Params): Promise<PostOrder> {
         year: z.string(),
         mileage: z.number(),
         fuel: z.enum(['electricity', 'petrol']),
-        range: z.number().nullable(),
+        range: z.number().nullable().optional(),
         seats: z.number().min(1).max(10),
         bags: z.number().min(1).max(12),
         pricePerDay: z.number().min(10),
